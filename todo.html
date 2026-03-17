@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dinamikus Teendőlista</title>
+    <style>
+        /* === Az általad megadott alap CSS === */
+        * { box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { font-size: 16px; line-height: 1.6; color: #333; background-color: #f8f9fa; margin: 20px; }
+        h1 { margin-bottom: 0.5em; text-align: center; }
+        
+        .btn { display: inline-block; padding: 8px 16px; margin: 5px; font-size: 16px; text-align: center; border: none; cursor: pointer; border-radius: 4px; }
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn:hover { opacity: 0.8; }
+        
+        input { width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ccc; border-radius: 4px; }
+        input:focus { border-color: #007bff; outline: none; }
+        
+        .container { width: 90%; max-width: 600px; margin: 0 auto; }
+        .card { background: white; padding: 25px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); margin-bottom: 15px; }
+
+        /* === A teendőlistához hozzáadott egyedi CSS === */
+        #todoList {
+            list-style-type: none; /* Ne legyenek pöttyök a lista elején */
+            padding: 0;
+            margin-top: 20px;
+        }
+        
+        #todoList li {
+            background-color: #f1f3f5;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            cursor: pointer; /* Mutassa, hogy kattintható */
+            transition: background-color 0.2s;
+        }
+
+        #todoList li:hover {
+            background-color: #e9ecef;
+        }
+
+        /* Ezt a classt fogja a JS rátenni az elemre kattintáskor */
+        .completed {
+            text-decoration: line-through;
+            color: #6c757d;
+        }
+        
+        /* Egy kis elrendezés az inputnak és a gombnak */
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="card">
+            <h1>Teendőlista</h1>
+            
+            <div class="input-group">
+                <input type="text" id="taskInput" placeholder="Írd be az új teendőt...">
+                <button id="addButton" class="btn btn-primary">Hozzáadás</button>
+            </div>
+
+            <ul id="todoList"></ul>
+        </div>
+    </div>
+
+    <script>
+        // 1. Megkeressük a DOM elemeket
+        const taskInput = document.getElementById('taskInput');
+        const addButton = document.getElementById('addButton');
+        const todoList = document.getElementById('todoList');
+
+        // 2. Eseménykezelő a Hozzáadás gombra
+        addButton.addEventListener('click', function() {
+            // Lekérjük a beviteli mező értékét (value)
+            const taskText = taskInput.value.trim(); 
+
+            // Csak akkor adunk hozzá újat, ha nem üres a mező
+            if (taskText !== '') {
+                
+                // Létrehozunk egy új <li> elemet
+                const listItem = document.createElement('li');
+                listItem.textContent = taskText;
+
+                // Eseménykezelő az új lista elemre (áthúzás kattintásra)
+                listItem.addEventListener('click', function() {
+                    // A toggle() leveszi, ha rajta van, és felteszi, ha nincs rajta a class
+                    this.classList.toggle('completed'); 
+                });
+
+                // Hozzáadjuk a listához (<ul>) az új elemet (<li>)
+                todoList.appendChild(listItem);
+
+                // Kiürítjük a beviteli mezőt
+                taskInput.value = '';
+            } else {
+                alert('Kérlek írj be egy teendőt!');
+            }
+        });
+
+        // Extra funkció: Enter gombbal is lehessen hozzáadni
+        taskInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                addButton.click();
+            }
+        });
+    </script>
+
+</body>
+</html>
